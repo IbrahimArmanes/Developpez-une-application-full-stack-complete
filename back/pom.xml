@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.mdd</groupId>
-	<artifactId>mdd-backend</artifactId>
+	<artifactId>mddapi</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>mdd-backend</name>
+	<name>mddapi</name>
 	<description>Monde de Dev - Backend</description>
 	
 	<properties>
@@ -117,8 +117,22 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.3.1</version> <!-- Use a newer version -->
+				<version>3.3.1</version>
 			</plugin>
 		</plugins>
+		
+		<!-- Explicitly define source directory structure -->
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<testSourceDirectory>src/test/java</testSourceDirectory>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+			</testResource>
+		</testResources>
 	</build>
 </project>
