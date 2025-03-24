@@ -8,6 +8,8 @@ class MddApiApplicationTests {
 
 	@Test
 	void contextLoads() {
+		// create a test that always passes
+		assert true;
 	}
 
 }
