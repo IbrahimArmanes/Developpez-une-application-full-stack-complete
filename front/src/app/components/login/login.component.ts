@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../services/auth.service';
+import { Location } from '@angular/common'; 
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,8 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private location: Location 
   ) {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required]],
@@ -29,10 +31,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-    
-    // If user is already logged in, redirect to return URL
     if (this.authService.isLoggedIn()) {
       this.router.navigate([this.returnUrl]);
     }
@@ -40,28 +39,40 @@ export class LoginComponent implements OnInit {
 
   onSubmit(): void {
     if (this.loginForm.invalid) {
+      // Marquer les champs comme touchés pour afficher les erreurs si nécessaire
+      this.loginForm.markAllAsTouched();
       return;
     }
 
     this.isSubmitting = true;
-    
+
     const credentials = {
-      username: this.loginForm.value.username,
+      // Assurez-vous que les clés correspondent à ce qu'attend votre LoginRequest DTO backend
+      username: this.loginForm.value.username, // Ou email: si le backend attend 'email'
       password: this.loginForm.value.password
     };
 
     this.authService.login(credentials).subscribe({
-      next: () => {
+      next: (response) => { // Supposons que le service login retourne la réponse avec le token
         this.isSubmitting = false;
+        // Le stockage du token devrait être géré dans AuthService ou ici si nécessaire
+        // Exemple : localStorage.setItem('authToken', response.token);
         this.router.navigate([this.returnUrl]);
       },
       error: (error) => {
         this.isSubmitting = false;
-        this.snackBar.open(error.message || 'Login failed. Please check your credentials.', 'Close', {
+        // Afficher un message plus spécifique basé sur l'erreur si possible
+        const errorMessage = error?.error?.message || error?.message || 'Login failed. Please check your credentials.';
+        this.snackBar.open(errorMessage, 'Close', {
           duration: 5000,
-          panelClass: ['error-snackbar']
+          panelClass: ['error-snackbar'] // Assurez-vous que cette classe est définie globalement ou ici
         });
       }
     });
+  }
+
+  // Méthode pour le bouton retour
+  goBack(): void {
+    this.location.back();
   }
 }

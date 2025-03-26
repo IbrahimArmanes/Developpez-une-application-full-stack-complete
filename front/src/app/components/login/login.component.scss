@@ -1,60 +1,143 @@
+// Variables (peuvent être partagées via un fichier _variables.scss global)
+$mobile-breakpoint: 600px;
+$form-max-width-desktop: 450px;
+$primary-color: #673ab7; // Ajustez selon votre thème
+
+// Desktop header with logo and separator
+.desktop-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: #e0e0e0;
+    margin-top: 10px;
+  }
+
+  @media (max-width: $mobile-breakpoint) {
+    display: none; // Cacher sur mobile
+  }
+}
+
+.logo-container-desktop {
+  padding: 10px 20px;
+
+  @media (min-width: ($mobile-breakpoint + 1px)) {
+    padding: 10px 40px;
+  }
+}
+
+.logo-desktop {
+  height: 40px;
+  width: auto;
+}
+
+// --- Changement de classe ici ---
 .login-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 20px;
-  background-color: #f5f5f5;
+  justify-content: center; // Centre le wrapper du formulaire horizontalement
+  align-items: flex-start; // Aligne les éléments en haut
+  padding: 40px 20px; // Padding haut/bas et côtés
+  min-height: calc(100vh - 64px); // Ajustez 64px si la hauteur de votre barre d'outils principale est différente
+  box-sizing: border-box;
+  position: relative; // Nécessaire pour le positionnement absolu du bouton retour
+  margin-top: 60px; // Espace pour l'en-tête fixe
+
+  @media (max-width: $mobile-breakpoint) {
+    margin-top: 0; // Pas d'en-tête fixe sur mobile
+  }
 }
 
-.login-card {
-  max-width: 450px;
-  width: 100%;
-  padding: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.back-button {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  color: inherit; // Hérite la couleur ou définissez spécifiquement
+
+  @media (min-width: ($mobile-breakpoint + 1px)) {
+    // Position différente sur desktop si nécessaire
+     top: 20px;
+     left: 40px;
+  }
 }
 
-.full-width {
-  width: 100%;
-  margin-bottom: 16px;
-}
-
-.form-actions {
+.form-wrapper {
   display: flex;
-  justify-content: center;
-  margin-top: 24px;
+  flex-direction: column;
+  align-items: center; // Centre le contenu horizontalement dans le wrapper
+  width: 100%;
+  max-width: $form-max-width-desktop; // Limite la largeur sur desktop
+  padding-top: 40px; // Espace sous le bouton retour absolu
+
+  @media (max-width: $mobile-breakpoint) {
+    padding-top: 60px; // Plus d'espace sur mobile sous le bouton retour et pour le logo
+  }
+}
+
+.logo-container-mobile {
+  display: none; // Caché par défaut (sur desktop)
+
+  @media (max-width: $mobile-breakpoint) {
+    display: block; // Visible uniquement sur mobile
+    margin-bottom: 20px;
+    text-align: center;
+  }
+}
+
+.logo-mobile {
+  max-width: 150px; // Ajustez la taille si besoin pour mobile
+  height: auto;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 1.8em;
+  font-weight: 500;
+}
+
+// --- Changement de classe ici ---
+.login-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%; // Le formulaire prend toute la largeur de son wrapper
+}
+
+.form-field {
+  width: 100%; // Les champs prennent toute la largeur
+  margin-bottom: 15px; // Espace entre les champs
 }
 
 .submit-button {
-  min-width: 150px;
-  height: 45px;
+  width: 100%; // Bouton pleine largeur
+  padding: 10px 0;
+  margin-top: 15px; // Espace au-dessus du bouton
+  min-height: 48px; // Hauteur cohérente, surtout avec le spinner
+
+  // Styles pour le spinner dans le bouton
+  mat-spinner {
+    display: inline-block; // Garde le spinner sur la même ligne
+    ::ng-deep circle {
+       stroke: white !important; // Rend le spinner visible sur le bouton primaire
+    }
+  }
 }
 
-.card-actions {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-top: 16px;
-  margin-top: 16px;
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
+// Styles pour les messages d'erreur (optionnel, mais recommandé)
+mat-error {
+  font-size: 0.75em;
 }
 
-mat-spinner {
-  display: inline-block;
-  margin-right: 8px;
-}
-
-mat-card-title {
-  font-size: 24px;
-  margin-bottom: 8px;
-}
-
-mat-card-subtitle {
-  font-size: 16px;
-  margin-bottom: 24px;
-}
-
-:host ::ng-deep .error-snackbar {
-  background-color: #f44336;
+// Styles pour le snackbar d'erreur (optionnel)
+.error-snackbar {
+  background-color: #f44336; // Couleur d'erreur Material Design
   color: white;
 }

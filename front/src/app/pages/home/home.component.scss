@@ -1,7 +1,68 @@
-.center {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+// Variables (optionnel, mais utile pour la cohérence)
+$mobile-breakpoint: 600px; // Point de rupture pour le passage en mode mobile
+$button-gap-desktop: 24px; // Espace entre les boutons sur desktop
+$button-gap-mobile: 16px; // Espace entre les boutons sur mobile
+$logo-margin-bottom: 40px; // Marge sous le logo
+$logo-max-width-desktop: 400px; // Taille pour desktop
+$logo-max-width-mobile: 200px; // Taille pour mobile
+
+
+// Styles du conteneur principal
+.home-container {
+  display: flex; // Utilisation de Flexbox pour l'alignement
+  flex-direction: column; // Empiler les éléments verticalement
+  justify-content: center; // Centrer verticalement dans la page
+  align-items: center; // Centrer horizontalement dans la page
+  min-height: 100vh; // Prendre au moins toute la hauteur de la vue
+  padding: 20px; // Ajouter un peu d'espace sur les bords
+  box-sizing: border-box; // Inclure padding dans la taille totale
 }
+
+// Styles du conteneur du logo
+.logo-container {
+  margin-bottom: $logo-margin-bottom;
+}
+
+// Styles du logo
+.logo {
+  max-width: $logo-max-width-desktop; // Limiter la largeur maximale du logo
+  height: auto; // Garder les proportions
+
+  // Ajuster la taille du logo sur les petits écrans si nécessaire
+  @media (max-width: $mobile-breakpoint) {
+    max-width: $logo-max-width-mobile;
+  }
+}
+
+// Styles du conteneur des boutons
+.button-container {
+  display: flex; // Utilisation de Flexbox pour les boutons
+  justify-content: center; // Centrer les boutons horizontalement
+  align-items: center; // Aligner les boutons verticalement (utile si hauteurs différentes)
+  gap: $button-gap-desktop; // Espace entre les boutons (Flexbox gap)
+
+  // Styles spécifiques pour le mode mobile
+  @media (max-width: $mobile-breakpoint) {
+    flex-direction: column; // Empiler les boutons verticalement
+    gap: $button-gap-mobile; // Espace vertical entre les boutons
+    width: 100%; // Prendre toute la largeur pour centrer les boutons correctement
+    max-width: 300px; // Limiter la largeur max pour ne pas qu'ils soient trop larges
+  }
+}
+
+// Styles communs aux boutons (optionnel, si besoin de plus de personnalisation)
+.home-button {
+  // Styles spécifiques si mat-stroked-button ne suffit pas
+  min-width: 120px; // Assurer une largeur minimale
+
+  @media (max-width: $mobile-breakpoint) {
+     width: 100%; // Faire prendre toute la largeur du container aux boutons sur mobile
+  }
+}
+
+// Specificité pour la couleur si besoin de forcer
+// Si le thème Material ne donne pas le bon rendu de couleur (ex: bordure)
+// button.mat-stroked-button.mat-primary {
+//   border-color: /* votre couleur */;
+//   color: /* votre couleur */;
+// }
