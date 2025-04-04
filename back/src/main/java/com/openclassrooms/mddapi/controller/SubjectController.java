@@ -78,4 +78,35 @@ public class SubjectController {
         subjectService.deleteSubject(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    
+    /**
+     * Subscribe the authenticated user to a subject
+     * @param id the subject ID to subscribe to
+     * @return OK response
+     */
+    @PostMapping("/{id}/subscribe")
+    @PreAuthorize("isAuthenticated()")
+public ResponseEntity<Void> subscribeToSubject(@PathVariable Long id) {
+    try {
+        subjectService.subscribe(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    } catch (Exception e) {
+        // Log the detailed error
+        System.err.println("Error subscribing to subject: " + e.getMessage());
+        e.printStackTrace();
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
+    
+    /**
+     * Unsubscribe the authenticated user from a subject
+     * @param id the subject ID to unsubscribe from
+     * @return OK response
+     */
+    @DeleteMapping("/{id}/subscribe")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Void> unsubscribeFromSubject(@PathVariable Long id) {
+        subjectService.unsubscribe(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

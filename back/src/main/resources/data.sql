@@ -7,11 +7,11 @@
 
 -- Insérer les Thèmes (Subjects)
 INSERT INTO subjects (id, nom) VALUES
-(1, 'Développement Web Frontend'),
-(2, 'Développement Web Backend'),
-(3, 'Bases de Données'),
-(4, 'DevOps & Cloud'),
-(5, 'Intelligence Artificielle')
+(1, "Développement Web Frontend"),
+(2, "Développement Web Backend"),
+(3, "Bases de Données"),
+(4, "DevOps & Cloud"),
+(5, "Intelligence Artificielle")
 ON DUPLICATE KEY UPDATE nom=nom; -- Ignore si l'ID existe déjà (utile si IDs non auto-incrémentés ou pour re-run)
 -- Si votre ID est auto-incrémenté, vous pouvez simplifier :
 -- INSERT INTO subjects (nom) VALUES

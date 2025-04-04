@@ -1,8 +1,11 @@
 package com.openclassrooms.mddapi.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.ToString;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -10,9 +13,12 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"abonnements", "posts", "comments"})
+@EqualsAndHashCode(exclude = {"abonnements", "posts", "comments"})
 public class User {
     
     @Id

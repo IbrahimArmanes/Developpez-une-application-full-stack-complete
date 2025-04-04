@@ -5,9 +5,13 @@ import com.openclassrooms.mddapi.dto.SubjectSimpleDto;
 import com.openclassrooms.mddapi.exception.ResourceNotFoundException;
 import com.openclassrooms.mddapi.mapper.SubjectMapper;
 import com.openclassrooms.mddapi.model.Subject;
+import com.openclassrooms.mddapi.model.User;
 import com.openclassrooms.mddapi.repository.SubjectRepository;
+import com.openclassrooms.mddapi.repository.UserRepository;
+import com.openclassrooms.mddapi.security.services.UserDetailsImpl;
 import com.openclassrooms.mddapi.service.SubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +23,9 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Autowired
     private SubjectRepository subjectRepository;
+    
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private SubjectMapper subjectMapper;
@@ -92,5 +99,59 @@ public class SubjectServiceImpl implements SubjectService {
         
         // Delete the subject
         subjectRepository.deleteById(id);
+    }
+    
+    @Override
+    @Transactional
+    public void subscribe(Long subjectId) {
+        // Get the authenticated user's ID from SecurityContextHolder
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long userId = userDetails.getId();
+        
+        // Retrieve the User entity
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+        
+        // Retrieve the Subject entity
+        Subject subject = subjectRepository.findById(subjectId)
+                .orElseThrow(() -> new ResourceNotFoundException("Subject not found with id: " + subjectId));
+        
+        // Check if the user is already subscribed to avoid duplicates
+        if (user.getAbonnements().contains(subject)) {
+            return; // User is already subscribed, no action needed
+        }
+        
+        // Add the subject to the user's subscriptions
+        user.getAbonnements().add(subject);
+        
+        // Save the updated user entity
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void unsubscribe(Long subjectId) {
+        // Get the authenticated user's ID from SecurityContextHolder
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long userId = userDetails.getId();
+        
+        // Retrieve the User entity
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+        
+        // Retrieve the Subject entity
+        Subject subject = subjectRepository.findById(subjectId)
+                .orElseThrow(() -> new ResourceNotFoundException("Subject not found with id: " + subjectId));
+        
+        // Check if the user is subscribed to the subject
+        if (!user.getAbonnements().contains(subject)) {
+            return; // User is not subscribed, no action needed
+        }
+        
+        // Remove the subject from the user's subscriptions
+        user.getAbonnements().remove(subject);
+        
+        // Save the updated user entity
+        userRepository.save(user);
     }
 }

@@ -1,0 +1,123 @@
+// Variables (optionnel, pour la cohérence)
+$mobile-breakpoint: 600px; // Ajustez selon vos besoins
+$card-gap: 20px;
+
+.themes-container {
+  padding: 20px;
+  max-width: 1200px; // Limite la largeur sur les très grands écrans
+  margin: 0 auto; // Centre le conteneur
+}
+
+// --- Styles pour Chargement et Erreur ---
+.loading-container,
+.error-message,
+.no-themes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  min-height: 300px; // Pour occuper de l'espace même vide
+
+  p {
+    margin-top: 15px;
+    font-size: 1.1em;
+    color: #666;
+  }
+}
+
+.error-message {
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 10px;
+  }
+  p {
+    color: var(--mat-warn-color, #f44336); // Utilise la couleur warn du thème Material
+  }
+  button {
+    margin-top: 20px;
+  }
+}
+
+// --- Styles pour la Grille des Thèmes ---
+.themes-grid {
+  display: grid;
+  gap: $card-gap;
+  // Par défaut : 1 colonne pour mobile
+  grid-template-columns: 1fr;
+
+  // Passe à 2 colonnes sur les écrans plus larges
+  @media (min-width: $mobile-breakpoint) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+   // Potentiellement 3 colonnes sur des écrans encore plus larges
+   @media (min-width: 1024px) {
+     grid-template-columns: repeat(3, 1fr);
+   }
+    // Ou utiliser auto-fill pour une grille plus dynamique:
+    // grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+// --- Styles pour Chaque Carte de Thème ---
+.theme-card {
+  display: flex;
+  flex-direction: column; // Empile header, content, actions verticalement
+  // box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); // Ombre portée légère si besoin
+  // border: 1px solid #eee; // Bordure légère
+  // padding: 15px; // Géré par mat-card, ajuster si besoin
+
+  mat-card-header {
+    padding-bottom: 10px; // Espace sous le titre
+  }
+
+  mat-card-title {
+    font-size: 1.2em;
+    font-weight: 500;
+  }
+
+  mat-card-content {
+    flex-grow: 1; // Permet au contenu de prendre l'espace disponible
+    color: #555;
+    font-size: 0.95em;
+    margin-bottom: 15px; // Espace avant les actions
+  }
+
+  .theme-description {
+    // Styles spécifiques à la description si nécessaire
+    line-height: 1.5;
+  }
+
+  mat-card-actions {
+    padding: 0 16px 16px 16px !important; // Assurer le padding du bas pour le bouton
+    margin-top: auto; // Pousse les actions vers le bas
+    display: flex; // Pour contrôler le bouton à l'intérieur
+
+    button {
+      width: 100%; // Bouton pleine largeur dans les actions
+      padding: 8px 0; // Ajuster le padding vertical du bouton
+      text-transform: uppercase; // Optionnel: mettre en majuscules comme la maquette
+      font-weight: 500;
+    }
+  }
+}
+
+// Style spécifique pour le bouton "Déjà abonné" (grisé)
+.subscribed-button {
+  // Utiliser les styles Material pour le bouton désactivé si possible,
+  // mais on peut forcer pour correspondre exactement à la maquette.
+  background-color: #bdbdbd !important; // Gris standard Material
+  color: rgba(0, 0, 0, 0.38) !important; // Couleur de texte standard pour désactivé
+  cursor: not-allowed; // Indique qu'il n'est pas cliquable
+}
+
+// Style pour le bouton "S'abonner" (Violet)
+.subscribe-button {
+   // Utilise la couleur primaire définie dans le thème Angular Material par défaut
+   // Si vous voulez forcer une couleur spécifique:
+   // background-color: #673ab7; // Violet exemple
+   // color: white;
+}

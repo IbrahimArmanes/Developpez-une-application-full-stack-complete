@@ -38,4 +38,16 @@ public interface SubjectService {
      * @param id the subject ID
      */
     void deleteSubject(Long id);
+
+    /**
+     * Subscribe the authenticated user to a subject
+     * @param subjectId the subject ID to subscribe to
+     */
+    void subscribe(Long subjectId);
+
+    /**
+     * Unsubscribe the authenticated user from a subject
+     * @param subjectId the subject ID to unsubscribe from
+     */
+    void unsubscribe(Long subjectId);
 }

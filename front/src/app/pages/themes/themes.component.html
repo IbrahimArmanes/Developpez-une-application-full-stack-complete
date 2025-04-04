@@ -1,0 +1,55 @@
+<div class="themes-container">
+  <!-- Barre de chargement ou indicateur -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Chargement des thèmes...</p>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="error && !isLoading" class="error-message">
+    <mat-icon color="warn">error_outline</mat-icon>
+    <p>{{ error }}</p>
+    <button mat-stroked-button color="primary" (click)="loadData()">Réessayer</button>
+  </div>
+
+  <!-- Affichage de la grille des thèmes -->
+  <div *ngIf="!isLoading && !error && subjects.length > 0" class="themes-grid">
+    <mat-card *ngFor="let subject of subjects" class="theme-card">
+      <mat-card-header>
+        <mat-card-title>{{ subject.nom }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <!-- Note: La description vient de la maquette, pas du SubjectSimpleDto.
+             Ajustez si la description est dynamique ou retirez si non nécessaire. -->
+        <p class="theme-description">
+          Description: lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...
+        </p>
+      </mat-card-content>
+      <mat-card-actions class="theme-actions">
+        <!-- Bouton S'abonner -->
+        <button
+          *ngIf="!isSubscribed(subject.id)"
+          mat-raised-button
+          color="primary"
+          class="subscribe-button"
+          (click)="subscribe(subject.id)">
+          S'abonner
+        </button>
+
+        <!-- Bouton/Statut Déjà abonné -->
+        <button
+          *ngIf="isSubscribed(subject.id)"
+          mat-raised-button
+          class="subscribed-button"
+          disabled>
+          Déjà abonné
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <!-- Message si aucun thème n'est trouvé -->
+  <div *ngIf="!isLoading && !error && subjects.length === 0" class="no-themes">
+    <p>Aucun thème disponible pour le moment.</p>
+  </div>
+</div>

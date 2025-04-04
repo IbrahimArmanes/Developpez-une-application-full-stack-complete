@@ -12,6 +12,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
+import { ThemesPageComponent } from './pages/themes/themes.component';
 
 // Services
 import { AuthService } from './services/auth.service';
@@ -25,13 +26,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [
     AppComponent, 
     HomeComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    ThemesPageComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +51,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatFormFieldModule,
     MatIconModule,
     MatSnackBarModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatListModule
   ],
   providers: [
     AuthService,
