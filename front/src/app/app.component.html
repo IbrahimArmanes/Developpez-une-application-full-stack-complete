@@ -1,1 +1,4 @@
-<router-outlet></router-outlet>
+<app-header *ngIf="isLoggedIn"></app-header>
+<div class="main-content" [ngClass]="{'no-header': !isLoggedIn}">
+  <router-outlet></router-outlet>
+</div>

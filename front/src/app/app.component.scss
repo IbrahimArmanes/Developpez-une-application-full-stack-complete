@@ -1,0 +1,10 @@
+.main-content {
+  margin-top: 64px; // Hauteur du header
+  min-height: calc(100vh - 64px);
+  padding: 20px;
+  
+  &.no-header {
+    margin-top: 0;
+    min-height: 100vh;
+  }
+}

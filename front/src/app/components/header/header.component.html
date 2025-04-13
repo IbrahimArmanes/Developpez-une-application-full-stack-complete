@@ -1,0 +1,72 @@
+<header class="header">
+  <div class="header-content">
+    <!-- Logo à gauche -->
+    <div class="logo-container">
+      <img src="/assets/logo_p6.png" alt="MDD Logo" class="logo" (click)="navigateTo('/')">
+    </div>
+
+    <!-- Navigation desktop à droite -->
+    <nav class="desktop-nav">
+      <ng-container *ngIf="isLoggedIn">
+        <button mat-button class="logout-button" (click)="logout()">Se déconnecter</button>
+        <button mat-button [class.active]="isRouteActive('/articles')" (click)="navigateTo('/articles')">Articles</button>
+        <button mat-button [class.active]="isRouteActive('/themes')" (click)="navigateTo('/themes')">Thèmes</button>
+        <button mat-icon-button [class.active]="isRouteActive('/profile')" (click)="navigateTo('/profile')">
+          <mat-icon>account_circle</mat-icon>
+        </button>
+      </ng-container>
+      <ng-container *ngIf="!isLoggedIn">
+        <button mat-button (click)="navigateTo('/login')">Se connecter</button>
+        <button mat-button (click)="navigateTo('/register')">S'inscrire</button>
+      </ng-container>
+    </nav>
+
+    <!-- Bouton menu mobile -->
+    <button mat-icon-button class="mobile-menu-button" (click)="toggleSidebar()">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </div>
+</header>
+
+<!-- Sidebar mobile -->
+<div class="sidebar-overlay" [class.open]="isSidebarOpen" (click)="closeSidebar()"></div>
+<div class="sidebar" [class.open]="isSidebarOpen">
+  <div class="sidebar-header">
+    <button mat-icon-button (click)="closeSidebar()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="sidebar-content">
+    <ng-container *ngIf="isLoggedIn">
+      <!-- Profil utilisateur en premier -->
+      <div class="user-profile-section">
+        <button mat-button class="sidebar-button" [class.active]="isRouteActive('/profile')" (click)="navigateTo('/profile')">
+          <mat-icon>account_circle</mat-icon>
+          <span>Profil</span>
+        </button>
+      </div>
+      <div class="sidebar-divider"></div>
+      <!-- Autres liens -->
+      <button mat-button class="sidebar-button" [class.active]="isRouteActive('/themes')" (click)="navigateTo('/themes')">
+        <span>Thèmes</span>
+      </button>
+      <button mat-button class="sidebar-button" [class.active]="isRouteActive('/articles')" (click)="navigateTo('/articles')">
+        <span>Articles</span>
+      </button>
+      <div class="sidebar-divider"></div>
+      <button mat-button class="sidebar-button logout-button" (click)="logout()">
+        <span>Se déconnecter</span>
+      </button>
+    </ng-container>
+    <ng-container *ngIf="!isLoggedIn">
+      <button mat-button class="sidebar-button" (click)="navigateTo('/login')">
+        <mat-icon>login</mat-icon>
+        <span>Se connecter</span>
+      </button>
+      <button mat-button class="sidebar-button" (click)="navigateTo('/register')">
+        <mat-icon>person_add</mat-icon>
+        <span>S'inscrire</span>
+      </button>
+    </ng-container>
+  </div>
+</div>

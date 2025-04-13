@@ -13,6 +13,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ThemesPageComponent } from './pages/themes/themes.component';
+import { HeaderComponent } from './components/header/header.component';
 
 // Services
 import { AuthService } from './services/auth.service';
@@ -34,7 +35,8 @@ import { MatListModule } from '@angular/material/list';
     HomeComponent,
     LoginComponent,
     RegisterComponent,
-    ThemesPageComponent
+    ThemesPageComponent,
+    HeaderComponent,
   ],
   imports: [
     BrowserModule,
