@@ -14,6 +14,8 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ThemesPageComponent } from './pages/themes/themes.component';
 import { HeaderComponent } from './components/header/header.component';
+import { FeedComponent } from './pages/feed/feed.component'; // Déjà présent
+import { ArticleDetailComponent } from './pages/article-detail/article-detail.component'; // Déjà présent
 
 // Services
 import { AuthService } from './services/auth.service';
@@ -28,15 +30,21 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatListModule } from '@angular/material/list';
+import { MatSelectModule } from '@angular/material/select';     
+import { MatDividerModule } from '@angular/material/divider';   
+
+
 
 @NgModule({
   declarations: [
-    AppComponent, 
+    AppComponent,
     HomeComponent,
     LoginComponent,
     RegisterComponent,
     ThemesPageComponent,
     HeaderComponent,
+    FeedComponent,           
+    ArticleDetailComponent,  
   ],
   imports: [
     BrowserModule,
@@ -45,7 +53,7 @@ import { MatListModule } from '@angular/material/list';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    
+
     // Angular Material
     MatButtonModule,
     MatCardModule,
@@ -54,7 +62,9 @@ import { MatListModule } from '@angular/material/list';
     MatIconModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
-    MatListModule
+    MatListModule,
+    MatSelectModule,          
+    MatDividerModule,         
   ],
   providers: [
     AuthService,

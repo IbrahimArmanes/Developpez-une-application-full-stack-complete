@@ -1,0 +1,108 @@
+.detail-container {
+    padding: 20px;
+    max-width: 900px;
+    margin: 20px auto; // Ajoute un peu d'espace en haut et centre
+  }
+  
+  .loading-container, .error-message {
+    text-align: center;
+    padding: 40px;
+  }
+  
+  .error-message {
+    color: red; // Ou theme.warn-color
+  }
+  
+  .article-content {
+    h1 {
+      margin-bottom: 8px;
+    }
+  }
+  
+  .article-meta {
+    font-size: 0.9em;
+    color: grey;
+    margin-bottom: 20px;
+  
+    span {
+      margin-right: 15px; // Espace entre les méta-données
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+  
+  .content-body {
+    margin-top: 20px;
+    margin-bottom: 30px;
+    line-height: 1.6; // Améliore la lisibilité
+  }
+  
+  .comments-section {
+    margin-top: 30px;
+  
+    h2 {
+      margin-bottom: 15px;
+    }
+  }
+  
+  .comment-item {
+    border-bottom: 1px solid #eee; // Sépare visuellement les commentaires
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+  
+     // Permet d'aligner la date à droite
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%; // Important pour le justify-content
+      margin-bottom: 4px;
+    }
+  
+    .comment-date {
+      font-size: 0.8em;
+      color: grey;
+    }
+  
+    .comment-content {
+      white-space: normal; // Permet le retour à la ligne
+      font-size: 0.95em;
+      padding-top: 5px;
+    }
+  }
+  
+  .no-comments {
+    color: grey;
+    font-style: italic;
+    margin-top: 15px;
+  }
+  
+  .add-comment-placeholder {
+      margin-top: 30px;
+      border: 1px dashed #ccc;
+      padding: 15px;
+      text-align: center;
+      color: #aaa;
+  
+      .comment-input-placeholder {
+          width: 100%;
+      }
+  }
+  
+  // Responsive adjustments if needed
+  @media (max-width: 600px) {
+    .detail-container {
+      padding: 15px;
+      margin-top: 10px;
+    }
+  
+    .article-meta {
+      font-size: 0.8em;
+      span {
+        display: block; // Met chaque meta sur sa propre ligne
+        margin-right: 0;
+        margin-bottom: 5px;
+      }
+    }
+  }

@@ -9,7 +9,7 @@
     <nav class="desktop-nav">
       <ng-container *ngIf="isLoggedIn">
         <button mat-button class="logout-button" (click)="logout()">Se déconnecter</button>
-        <button mat-button [class.active]="isRouteActive('/articles')" (click)="navigateTo('/articles')">Articles</button>
+        <button mat-button [class.active]="isRouteActive('/feed')" (click)="navigateTo('/feed')">Articles</button>
         <button mat-button [class.active]="isRouteActive('/themes')" (click)="navigateTo('/themes')">Thèmes</button>
         <button mat-icon-button [class.active]="isRouteActive('/profile')" (click)="navigateTo('/profile')">
           <mat-icon>account_circle</mat-icon>
@@ -50,22 +50,12 @@
       <button mat-button class="sidebar-button" [class.active]="isRouteActive('/themes')" (click)="navigateTo('/themes')">
         <span>Thèmes</span>
       </button>
-      <button mat-button class="sidebar-button" [class.active]="isRouteActive('/articles')" (click)="navigateTo('/articles')">
+      <button mat-button class="sidebar-button" [class.active]="isRouteActive('/feed')" (click)="navigateTo('/feed')">
         <span>Articles</span>
       </button>
       <div class="sidebar-divider"></div>
       <button mat-button class="sidebar-button logout-button" (click)="logout()">
         <span>Se déconnecter</span>
-      </button>
-    </ng-container>
-    <ng-container *ngIf="!isLoggedIn">
-      <button mat-button class="sidebar-button" (click)="navigateTo('/login')">
-        <mat-icon>login</mat-icon>
-        <span>Se connecter</span>
-      </button>
-      <button mat-button class="sidebar-button" (click)="navigateTo('/register')">
-        <mat-icon>person_add</mat-icon>
-        <span>S'inscrire</span>
       </button>
     </ng-container>
   </div>

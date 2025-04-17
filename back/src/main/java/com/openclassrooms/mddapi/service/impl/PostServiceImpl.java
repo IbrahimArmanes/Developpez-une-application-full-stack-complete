@@ -12,6 +12,8 @@ import com.openclassrooms.mddapi.repository.SubjectRepository;
 import com.openclassrooms.mddapi.repository.UserRepository;
 import com.openclassrooms.mddapi.security.services.UserDetailsImpl;
 import com.openclassrooms.mddapi.service.PostService;
+
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -156,4 +158,45 @@ public class PostServiceImpl implements PostService {
                 })
                 .collect(Collectors.toList());
     }
+    @Override
+    @Transactional(readOnly = true)
+    public List<PostSimpleDto> getFeed(String sortDirection) {
+        // Get the current authenticated user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        Long userId = userDetails.getId();
+        
+        // Find the user with subscriptions
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+        
+        // Get user subscriptions
+        Set<Subject> subscriptions = user.getAbonnements();
+        
+        // If user has no subscriptions, return empty list
+        if (subscriptions == null || subscriptions.isEmpty()) {
+            return List.of();
+        }
+        
+        // Get posts from subscribed subjects with specified sort direction
+        List<Post> posts;
+        if ("asc".equalsIgnoreCase(sortDirection)) {
+            posts = postRepository.findByThemeInOrderByDateAsc(subscriptions);
+        } else {
+            // Default is descending order
+            posts = postRepository.findByThemeInOrderByDateDesc(subscriptions);
+        }
+        
+        // Convert to simple DTOs and return
+        return posts.stream()
+                .map(post -> {
+                    PostSimpleDto simpleDto = new PostSimpleDto();
+                    simpleDto.setId(post.getId());
+                    simpleDto.setTitre(post.getTitre());
+                    simpleDto.setDate(post.getDate());
+                    return simpleDto;
+                })
+                .collect(Collectors.toList());
+    }
+
 }

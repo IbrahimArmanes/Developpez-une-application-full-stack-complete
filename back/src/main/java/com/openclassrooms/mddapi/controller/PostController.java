@@ -89,4 +89,22 @@ public class PostController {
         List<PostSimpleDto> posts = postService.getPostsBySubject(subjectId);
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
+    
+    /**
+     * Get personalized feed of posts based on user subscriptions
+     * @param sort the sort direction ("asc" or "desc")
+     * @return list of posts from subscribed subjects
+     */
+    @GetMapping("/feed")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<PostSimpleDto>> getFeed(
+            @RequestParam(required = false, defaultValue = "desc") String sort) {
+        try {
+            List<PostSimpleDto> feed = postService.getFeed(sort);
+            return new ResponseEntity<>(feed, HttpStatus.OK);
+        } catch (Exception e) {
+            // Log the exception
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

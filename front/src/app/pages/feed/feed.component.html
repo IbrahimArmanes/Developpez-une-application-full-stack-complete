@@ -1,0 +1,47 @@
+<div class="feed-container">
+    <div class="feed-header">
+      <button mat-raised-button color="primary" (click)="navigateToCreateArticle()">
+        Créer un article
+      </button>
+      <mat-form-field appearance="outline" class="sort-control">
+        <mat-label>Trier par</mat-label>
+        <mat-select (selectionChange)="changeSort($event)" [value]="currentSort">
+          <mat-option value="desc">Plus récent</mat-option>
+          <mat-option value="asc">Plus ancien</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
+  
+    <div *ngIf="error && !isLoading" class="error-message">
+      <p>{{ error }}</p>
+      <button mat-stroked-button color="warn" (click)="loadFeed()">Réessayer</button>
+    </div>
+  
+    <div *ngIf="!isLoading && !error">
+      <div *ngIf="posts.length > 0" class="posts-layout">
+        <mat-card *ngFor="let post of posts" class="post-card" (click)="navigateToDetail(post.id)">
+          <mat-card-header>
+            <mat-card-title>{{ post.titre }}</mat-card-title>
+            <!-- Note: PostSimpleDto n'a pas l'auteur, seulement date/titre/id -->
+            <mat-card-subtitle>{{ post.date | date:'dd/MM/yyyy' }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <!-- Note: PostSimpleDto n'a pas le contenu -->
+            <p class="post-content-placeholder">
+              Contenu de l'article non disponible dans cet aperçu...
+            </p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+  
+      <div *ngIf="posts.length === 0" class="no-posts">
+        <p>Aucun article à afficher dans votre flux pour le moment.</p>
+        <p>Abonnez-vous à des thèmes pour voir les articles correspondants.</p>
+      </div>
+    </div>
+  
+  </div>

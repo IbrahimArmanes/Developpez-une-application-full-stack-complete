@@ -1,17 +1,19 @@
 package com.openclassrooms.mddapi.mapper;
 
-import com.openclassrooms.mddapi.dto.CommentDto;
 import com.openclassrooms.mddapi.dto.PostDto;
 import com.openclassrooms.mddapi.dto.SubjectSimpleDto;
 import com.openclassrooms.mddapi.dto.UserSimpleDto;
-import com.openclassrooms.mddapi.model.Comment;
 import com.openclassrooms.mddapi.model.Post;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
 @Component
 public class PostMapper {
+
+    @Autowired
+    private CommentMapper commentMapper;
 
     /**
      * Convert Post entity to PostDto
@@ -45,10 +47,10 @@ public class PostMapper {
             postDto.setTheme(themeDto);
         }
         
-        // Map comments
+        // Map comments using CommentMapper
         if (post.getCommentaires() != null) {
             postDto.setCommentaires(post.getCommentaires().stream()
-                    .map(this::mapCommentToDto)
+                    .map(commentMapper::toDto)
                     .collect(Collectors.toSet()));
         }
         
@@ -74,17 +76,5 @@ public class PostMapper {
         
         return post;
     }
-    
-    /**
-     * Helper method to map Comment to CommentDto
-     * @param comment the comment to map
-     * @return the comment DTO
-     */
-    private CommentDto mapCommentToDto(Comment comment) {
-        CommentDto commentDto = new CommentDto();
-        commentDto.setId(comment.getId());
-        // Set other comment properties as needed
-        
-        return commentDto;
-    }
+
 }

@@ -45,4 +45,11 @@ public interface PostService {
      * @return list of posts for the subject in simple form
      */
     List<PostSimpleDto> getPostsBySubject(Long subjectId);
+    
+    /**
+     * Get personalized feed of posts based on user subscriptions
+     * @param sortDirection the sort direction ("asc" or "desc")
+     * @return list of posts from subscribed subjects
+     */
+    List<PostSimpleDto> getFeed(String sortDirection);
 }

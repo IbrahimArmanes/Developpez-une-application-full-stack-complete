@@ -1,0 +1,64 @@
+<div class="detail-container">
+    <button mat-icon-button (click)="goBack()" aria-label="Retour">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
+  
+    <div *ngIf="error && !isLoading" class="error-message">
+      <p>{{ error }}</p>
+    </div>
+  
+    <div *ngIf="post && !isLoading && !error" class="article-content">
+      <h1>{{ post.titre }}</h1>
+  
+      <div class="article-meta">
+        <span>{{ post.date | date:'dd/MM/yyyy' }}</span>
+        <span>par {{ post.auteur?.username || 'Auteur inconnu' }}</span>
+        <span>Thème: {{ post.theme?.nom || 'Thème inconnu' }}</span>
+      </div>
+  
+      <div class="content-body">
+        <!-- Utiliser [innerHTML] si le contenu peut être HTML, sinon simple interpolation -->
+        <!-- Attention à la sécurité avec [innerHTML] si la source n'est pas fiable -->
+        <p>{{ post.contenu }}</p>
+      </div>
+  
+      <mat-divider></mat-divider>
+  
+      <section class="comments-section">
+        <h2>Commentaires</h2>
+  
+        <div *ngIf="post.commentaires && post.commentaires.length > 0">
+          <mat-list>
+            <mat-list-item *ngFor="let comment of post.commentaires" class="comment-item">
+              <div mat-line class="comment-header">
+                <strong>{{ comment.auteur?.username || 'Utilisateur inconnu' }}</strong>
+                <span class="comment-date">{{ comment.date | date:'short' }}</span>
+              </div>
+              <p mat-line class="comment-content"> {{ comment.contenu }} </p>
+            </mat-list-item>
+          </mat-list>
+        </div>
+  
+        <div *ngIf="!post.commentaires || post.commentaires.length === 0" class="no-comments">
+          <p>Aucun commentaire pour cet article.</p>
+        </div>
+  
+         <!-- Zone pour ajouter un commentaire (sera implémentée plus tard) -->
+         <div class="add-comment-placeholder">
+           <mat-form-field appearance="outline" class="comment-input-placeholder">
+              <mat-label>Écrivez ici votre commentaire</mat-label>
+              <textarea matInput disabled rows="3"></textarea>
+              <button mat-icon-button matSuffix disabled>
+                  <mat-icon>send</mat-icon>
+              </button>
+           </mat-form-field>
+         </div>
+  
+      </section>
+  
+    </div>
+  </div>

@@ -5,11 +5,18 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ThemesPageComponent } from './pages/themes/themes.component';
 import { AuthGuard } from './guards/auth.guard';
+import { FeedComponent } from './pages/feed/feed.component';
+import { ArticleDetailComponent } from './pages/article-detail/article-detail.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent
+    redirectTo: '/home',
+    pathMatch: 'full'
+  },
+  {
+    path: 'home',
+    component: HomeComponent,
   },
   {
     path: 'login',
@@ -22,12 +29,21 @@ const routes: Routes = [
   {
     path: 'themes',
     component: ThemesPageComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard] 
   },
-  // Redirect any unknown paths to home
+  {
+    path: 'feed',
+    component: FeedComponent,
+    canActivate: [AuthGuard] 
+  },
+  {
+    path: 'article/:id', 
+    component: ArticleDetailComponent,
+    canActivate: [AuthGuard] 
+  },
   {
     path: '**',
-    redirectTo: ''
+    redirectTo: '/home'
   }
 ];
 

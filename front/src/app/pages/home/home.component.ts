@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service'; // Adjust path if necessary
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -7,11 +8,17 @@ import { AuthService } from '../../services/auth.service'; // Adjust path if nec
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  // Inject AuthService and make it public
-  constructor(public authService: AuthService) {}
+
+  constructor(
+    public authService: AuthService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
-    // You can keep or remove the start() method/logic if not needed
+    if (this.authService.isLoggedIn()) {
+      // Redirect to feed if logged in
+      this.router.navigate(['/feed']);
+    }
   }
 
   // Method to call when the logout button is clicked
