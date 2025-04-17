@@ -8,6 +8,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { FeedComponent } from './pages/feed/feed.component';
 import { ArticleDetailComponent } from './pages/article-detail/article-detail.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { CreatePostComponent } from './pages/create-post/create-post.component';
 
 const routes: Routes = [
   {
@@ -45,6 +46,11 @@ const routes: Routes = [
   {
     path: 'profile',
     component: ProfileComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'create-post',
+    component: CreatePostComponent,
     canActivate: [AuthGuard]
   },
   {

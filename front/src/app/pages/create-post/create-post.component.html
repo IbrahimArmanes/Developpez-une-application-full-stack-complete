@@ -1,0 +1,68 @@
+<div class="create-post-container">
+    <!-- Bouton Retour -->
+    <button mat-icon-button class="back-button" aria-label="Retour" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  
+    <h2>Créer un nouvel article</h2>
+  
+    <form [formGroup]="postForm" (ngSubmit)="onSubmit()" class="post-creation-form">
+  
+      <!-- Champ Sélection Thème -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Sélectionner un thème</mat-label>
+        <mat-select formControlName="themeId" required>
+          <mat-option *ngIf="isLoadingSubjects" disabled>
+            Chargement des thèmes...
+          </mat-option>
+          <mat-option *ngFor="let subject of subjects" [value]="subject.id">
+            {{ subject.nom }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="postForm.get('themeId')?.hasError('required') && postForm.get('themeId')?.touched">
+          Veuillez sélectionner un thème.
+        </mat-error>
+      </mat-form-field>
+  
+      <!-- Champ Titre -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Titre de l'article</mat-label>
+        <input matInput formControlName="titre" required>
+        <mat-error *ngIf="postForm.get('titre')?.hasError('required') && postForm.get('titre')?.touched">
+          Le titre est requis.
+        </mat-error>
+        <mat-error *ngIf="postForm.get('titre')?.hasError('minlength') && postForm.get('titre')?.touched">
+          Le titre doit contenir au moins 5 caractères.
+        </mat-error>
+      </mat-form-field>
+  
+      <!-- Champ Contenu -->
+      <mat-form-field appearance="outline" class="form-field textarea-field">
+        <mat-label>Contenu de l'article</mat-label>
+        <textarea matInput
+                  formControlName="contenu"
+                  required
+                  cdkTextareaAutosize
+                  #autosize="cdkTextareaAutosize"
+                  cdkAutosizeMinRows="8"
+                  cdkAutosizeMaxRows="20">
+        </textarea>
+        <mat-error *ngIf="postForm.get('contenu')?.hasError('required') && postForm.get('contenu')?.touched">
+          Le contenu est requis.
+        </mat-error>
+         <mat-error *ngIf="postForm.get('contenu')?.hasError('minlength') && postForm.get('contenu')?.touched">
+          Le contenu doit contenir au moins 10 caractères.
+        </mat-error>
+      </mat-form-field>
+  
+      <!-- Affichage Erreur Générale -->
+       <p *ngIf="error" class="form-error-message">{{ error }}</p>
+  
+      <!-- Bouton Créer -->
+      <button mat-raised-button color="primary" type="submit" class="submit-button" [disabled]="postForm.invalid || isSubmitting || isLoadingSubjects">
+        <span *ngIf="!isSubmitting">Créer</span>
+        <mat-spinner *ngIf="isSubmitting" diameter="24" color="accent"></mat-spinner>
+      </button>
+  
+    </form>
+  </div>

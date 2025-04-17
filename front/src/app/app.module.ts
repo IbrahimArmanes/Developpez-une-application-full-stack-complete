@@ -32,7 +32,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';     
 import { MatDividerModule } from '@angular/material/divider';
-import { ProfileComponent } from './pages/profile/profile.component';   
+import { ProfileComponent } from './pages/profile/profile.component';
+import { CreatePostComponent } from './pages/create-post/create-post.component';   
 
 
 
@@ -45,7 +46,7 @@ import { ProfileComponent } from './pages/profile/profile.component';
     ThemesPageComponent,
     HeaderComponent,
     FeedComponent,           
-    ArticleDetailComponent, ProfileComponent,  
+    ArticleDetailComponent, ProfileComponent, CreatePostComponent,  
   ],
   imports: [
     BrowserModule,

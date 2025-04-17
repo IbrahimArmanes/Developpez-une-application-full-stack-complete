@@ -55,8 +55,6 @@ export class FeedComponent implements OnInit {
   }
 
   navigateToCreateArticle(): void {
-    // Implémentez la navigation vers la page de création d'article plus tard
-    // this.router.navigate(['/create-article']);
-    console.log('Navigation vers la création d\'article');
+    this.router.navigate(['/create-post']);
   }
 }
