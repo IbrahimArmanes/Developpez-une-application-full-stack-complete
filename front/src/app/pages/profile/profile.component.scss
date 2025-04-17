@@ -1,0 +1,157 @@
+// Variables (ajustez selon votre thème)
+$mobile-breakpoint: 768px;
+$form-max-width: 500px;
+$section-spacing: 30px;
+$card-gap: 20px;
+
+.profile-container {
+  padding: 20px;
+  max-width: 900px; // Limite la largeur sur les très grands écrans
+  margin: 20px auto; // Centre le conteneur
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px; // Donne de l'espace au spinner
+}
+
+h2 {
+  margin-top: $section-spacing;
+  margin-bottom: 15px;
+  font-weight: 500;
+  text-align: center;
+
+  &:first-of-type {
+      margin-top: 0; // Pas de marge en haut pour le premier titre
+  }
+}
+
+// Styles communs aux formulaires
+.profile-form,
+.password-form {
+  display: flex;
+  flex-direction: column;
+  max-width: $form-max-width;
+  margin: 0 auto $section-spacing auto; // Centre horizontalement
+}
+
+.form-field {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.submit-button {
+  margin-top: 10px;
+  min-height: 40px; // Hauteur pour le spinner
+
+  mat-spinner {
+    display: inline-block;
+    ::ng-deep circle {
+       stroke: white !important; // Spinner blanc sur bouton primaire
+    }
+  }
+}
+
+.section-divider {
+  margin-top: $section-spacing;
+  margin-bottom: $section-spacing;
+}
+
+// Grille des abonnements
+.subscriptions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); // Responsive grid
+  gap: $card-gap;
+  margin-bottom: $section-spacing;
+}
+
+.subscription-card {
+  display: flex;
+  flex-direction: column;
+
+  mat-card-content {
+    flex-grow: 1; // Fait en sorte que le contenu pousse les actions vers le bas
+    margin-bottom: 10px; // Espace avant les actions
+  }
+  
+  .theme-description {
+      font-size: 0.9em;
+      color: grey;
+      line-height: 1.4;
+  }
+
+  mat-card-actions {
+      padding: 8px 16px !important; // Ajuste le padding des actions si nécessaire
+  }
+}
+
+.no-subscriptions {
+  text-align: center;
+  color: grey;
+  margin-bottom: $section-spacing;
+}
+
+// Bouton de déconnexion
+.logout-button {
+  display: block; // Prend toute la largeur
+  max-width: $form-max-width; // Cohérent avec les formulaires
+  margin: $section-spacing auto 0 auto; // Centré, avec espace au-dessus
+}
+
+// Messages d'erreur
+.form-error-message {
+  color: red; // Ou utilisez theme.warn
+  font-size: 0.8em;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.global-error-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: red; // Ou utilisez theme.warn
+  padding: 20px;
+
+  mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      margin-bottom: 10px;
+  }
+  
+  button {
+      margin-top: 15px;
+  }
+}
+
+// Adaptation Mobile
+@media (max-width: $mobile-breakpoint) {
+  .profile-container {
+    padding: 15px;
+  }
+
+  .subscriptions-grid {
+    grid-template-columns: 1fr; // Une seule colonne sur mobile
+    gap: 15px;
+  }
+
+  .profile-form,
+  .password-form,
+  .logout-button {
+      max-width: 100%; // Prend toute la largeur disponible
+  }
+
+  h2 {
+      font-size: 1.4em;
+  }
+}
+
+// Styles pour mat-hint (peut être mis globalement)
+.mat-hint {
+  font-size: 0.7em;
+}

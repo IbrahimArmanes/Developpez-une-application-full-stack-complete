@@ -7,6 +7,7 @@ import { ThemesPageComponent } from './pages/themes/themes.component';
 import { AuthGuard } from './guards/auth.guard';
 import { FeedComponent } from './pages/feed/feed.component';
 import { ArticleDetailComponent } from './pages/article-detail/article-detail.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 const routes: Routes = [
   {
@@ -40,6 +41,11 @@ const routes: Routes = [
     path: 'article/:id', 
     component: ArticleDetailComponent,
     canActivate: [AuthGuard] 
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: '**',

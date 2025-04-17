@@ -4,13 +4,18 @@ import com.openclassrooms.mddapi.dto.SubjectSimpleDto;
 import com.openclassrooms.mddapi.dto.UserCreateDto;
 import com.openclassrooms.mddapi.dto.UserDto;
 import com.openclassrooms.mddapi.dto.UserResponseDto;
+import com.openclassrooms.mddapi.exception.ResourceNotFoundException;
 import com.openclassrooms.mddapi.model.Subject;
 import com.openclassrooms.mddapi.model.User;
 import com.openclassrooms.mddapi.repository.UserRepository;
 import com.openclassrooms.mddapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -66,10 +71,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto updateUser(UserDto userDto) {
-        // Check if user exists
-        User user = userRepository.findById(userDto.getId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userDto.getId()));
+        // Get the authenticated user from SecurityContextHolder
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("No authenticated user found");
+        }
+        
+        String username;
+        Object principal = authentication.getPrincipal();
+        
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        
+        // Find the authenticated user in the database
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with username: " + username));
+        
+        // Check if email is being changed and if it's already in use
+        if (!user.getEmail().equals(userDto.getEmail()) && 
+            userRepository.existsByEmail(userDto.getEmail())) {
+            throw new IllegalArgumentException("Email is already in use");
+        }
 
         // Check if username is being changed and if it's already taken
         if (!user.getUsername().equals(userDto.getUsername()) && 
@@ -77,20 +104,14 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Username is already taken");
         }
 
-        // Check if email is being changed and if it's already in use
-        if (!user.getEmail().equals(userDto.getEmail()) && 
-            userRepository.existsByEmail(userDto.getEmail())) {
-            throw new IllegalArgumentException("Email is already in use");
-        }
-
-        // Update user fields
+        // Update ONLY email and username fields
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
         
-        // Note: We don't update password here as it should be handled by a separate endpoint
-        // with proper validation
-
+        // Save the updated user
         User updatedUser = userRepository.save(user);
+        
+        // Convert to DTO and return
         return convertToUserDto(updatedUser);
     }
 
@@ -138,9 +159,25 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public void updatePassword(Long userId, String currentPassword, String newPassword) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+    public void updatePassword(String currentPassword, String newPassword) {
+        // Get the authenticated user from SecurityContextHolder
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("No authenticated user found");
+        }
+        
+        String username;
+        Object principal = authentication.getPrincipal();
+        
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        
+        // Find the authenticated user in the database
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with username: " + username));
         
         // Verify current password
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
@@ -152,4 +189,31 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public UserDto getCurrentUserProfile() {
+        // Get the authenticated user from SecurityContextHolder
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("No authenticated user found");
+        }
+        
+        String username;
+        Object principal = authentication.getPrincipal();
+        
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        
+        // Find the user in the database
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with username: " + username));
+        
+        // The transaction will ensure that the lazy-loaded abonnements are loaded when accessed
+        
+        // Convert to DTO and return
+        return convertToUserDto(user);
+    }
 }

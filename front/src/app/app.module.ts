@@ -31,7 +31,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';     
-import { MatDividerModule } from '@angular/material/divider';   
+import { MatDividerModule } from '@angular/material/divider';
+import { ProfileComponent } from './pages/profile/profile.component';   
 
 
 
@@ -44,7 +45,7 @@ import { MatDividerModule } from '@angular/material/divider';
     ThemesPageComponent,
     HeaderComponent,
     FeedComponent,           
-    ArticleDetailComponent,  
+    ArticleDetailComponent, ProfileComponent,  
   ],
   imports: [
     BrowserModule,

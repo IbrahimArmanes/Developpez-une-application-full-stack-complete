@@ -78,49 +78,65 @@ public class UserController {
     }
 
     /**
-     * Update user
-     * @param id User ID
-     * @param userDto Updated user data
+     * Update the currently authenticated user's profile
+     * @param userDto Updated user data (email and username)
      * @return Updated user
      */
-    @PutMapping("/{id}")
-    @PreAuthorize("isAuthenticated() and (authentication.principal.id == #id or hasRole('ADMIN'))")
-    public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDto) {
+    @PutMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<UserDto> updateCurrentUser(@Valid @RequestBody UserDto userDto) {
         try {
-            // Mettre à jour les attributs avec les valeurs du DTO
-            userDto.setId(id); // S'assurer que l'ID est correctement défini
-            
             UserDto updatedUser = userService.updateUser(userDto);
             return ResponseEntity.ok(updatedUser);
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (IllegalStateException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authenticated");
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error updating user", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error updating user profile", e);
         }
     }
 
 
     /**
-     * Update user password
-     * @param id User ID
+     * Update the currently authenticated user's password
      * @param passwordUpdateRequest Password update request
      * @return Success message
      */
-    @PutMapping("/{id}/password")
-    @PreAuthorize("isAuthenticated() and authentication.principal.id == #id")
-    public ResponseEntity<?> updatePassword(
-            @PathVariable Long id, 
+    @PutMapping("/me/password")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> updateCurrentUserPassword(
             @Valid @RequestBody PasswordUpdateRequest passwordUpdateRequest) {
         try {
-            userService.updatePassword(id, 
-                                    passwordUpdateRequest.getCurrentPassword(), 
-                                    passwordUpdateRequest.getNewPassword());
+            userService.updatePassword(
+                    passwordUpdateRequest.getCurrentPassword(), 
+                    passwordUpdateRequest.getNewPassword());
             return ResponseEntity.ok(new MessageResponse("Password updated successfully"));
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (IllegalStateException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authenticated");
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error updating password", e);
         }
     }
 
+    /**
+     * Get the profile of the currently authenticated user
+     * @return Current user data including subscriptions
+     */
+    @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<UserDto> getCurrentUserProfile() {
+        try {
+            UserDto currentUser = userService.getCurrentUserProfile();
+            return ResponseEntity.ok(currentUser);
+        } catch (IllegalStateException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authenticated");
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error retrieving current user profile", e);
+        }
+    }
 }

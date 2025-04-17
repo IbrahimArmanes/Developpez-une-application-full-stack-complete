@@ -1,0 +1,121 @@
+<div class="profile-container">
+    <!-- Barre de chargement principale -->
+    <div *ngIf="isLoading" class="loading-spinner">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
+  
+    <!-- Affichage principal si pas de chargement et pas d'erreur initiale -->
+    <ng-container *ngIf="user && !isLoading && !profileError">
+      
+      <!-- Section Profil Utilisateur (Email/Username) -->
+      <h2>Profil utilisateur</h2>
+      <form [formGroup]="profileForm" (ngSubmit)="onProfileSubmit()" class="profile-form">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Username</mat-label>
+          <input matInput formControlName="username" required>
+          <mat-error *ngIf="profileForm.get('username')?.hasError('required')">
+            Le nom d'utilisateur est requis.
+          </mat-error>
+          <mat-error *ngIf="profileForm.get('username')?.hasError('minlength')">
+            Doit contenir au moins 3 caractères.
+          </mat-error>
+           <mat-error *ngIf="profileForm.get('username')?.hasError('maxlength')">
+            Ne peut pas dépasser 20 caractères.
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" required email>
+          <mat-error *ngIf="profileForm.get('email')?.hasError('required')">
+            L'email est requis.
+          </mat-error>
+          <mat-error *ngIf="profileForm.get('email')?.hasError('email')">
+            Format d'email invalide.
+          </mat-error>
+        </mat-form-field>
+  
+        <button mat-raised-button color="primary" type="submit" class="submit-button" [disabled]="profileForm.invalid || profileForm.pristine || isUpdatingProfile">
+          <span *ngIf="!isUpdatingProfile">Sauvegarder</span>
+          <mat-spinner *ngIf="isUpdatingProfile" diameter="24" color="accent"></mat-spinner>
+        </button>
+         <!-- Affichage d'erreur spécifique au formulaire de profil -->
+        <p *ngIf="formProfileError" class="form-error-message">{{ formProfileError }}</p>
+      </form>
+  
+      <mat-divider class="section-divider"></mat-divider>
+  
+      <!-- Section Changement de Mot de Passe -->
+      <h2>Changer le mot de passe</h2>
+      <form [formGroup]="passwordForm" (ngSubmit)="onPasswordSubmit()" class="password-form">
+         <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Mot de passe actuel</mat-label>
+          <input matInput [type]="hideCurrentPassword ? 'password' : 'text'" formControlName="currentPassword" required>
+           <button mat-icon-button matSuffix (click)="hideCurrentPassword = !hideCurrentPassword" [attr.aria-label]="'Toggle current password visibility'" type="button">
+            <mat-icon>{{hideCurrentPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="passwordForm.get('currentPassword')?.hasError('required') && passwordForm.get('currentPassword')?.touched">
+            Le mot de passe actuel est requis.
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Nouveau mot de passe</mat-label>
+          <input matInput [type]="hideNewPassword ? 'password' : 'text'" formControlName="newPassword" required>
+           <button mat-icon-button matSuffix (click)="hideNewPassword = !hideNewPassword" [attr.aria-label]="'Toggle new password visibility'" type="button">
+            <mat-icon>{{hideNewPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+           <mat-hint align="end">{{ passwordForm.get('newPassword')?.value?.length || 0 }} / min 8</mat-hint>
+          <mat-error *ngIf="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched">
+            {{ getPasswordErrorMessage() }}
+          </mat-error>
+           <mat-hint *ngIf="passwordForm.get('newPassword')?.untouched && !passwordForm.get('newPassword')?.invalid" align="start">
+            Min 8 chars, majuscule, minuscule, chiffre, spécial.
+          </mat-hint>
+        </mat-form-field>
+  
+        <button mat-raised-button color="primary" type="submit" class="submit-button" [disabled]="passwordForm.invalid || isUpdatingPassword">
+          <span *ngIf="!isUpdatingPassword">Changer le mot de passe</span>
+          <mat-spinner *ngIf="isUpdatingPassword" diameter="24" color="accent"></mat-spinner>
+        </button>
+         <!-- Affichage d'erreur spécifique au formulaire de mot de passe -->
+         <p *ngIf="formPasswordError" class="form-error-message">{{ formPasswordError }}</p>
+      </form>
+  
+      <mat-divider class="section-divider"></mat-divider>
+  
+      <!-- Section Abonnements -->
+      <h2>Abonnements</h2>
+      <div *ngIf="user.abonnements && user.abonnements.length > 0" class="subscriptions-grid">
+        <mat-card *ngFor="let sub of user.abonnements" class="subscription-card">
+          <mat-card-header>
+            <mat-card-title>{{ sub.nom }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p class="theme-description">
+              Description: lorem ipsum is simply dummy text of the printing and typesetting industry... <!-- Placeholder comme dans la maquette -->
+            </p>
+          </mat-card-content>
+          <mat-card-actions align="end">
+            <button mat-stroked-button color="warn" (click)="unsubscribe(sub.id)">
+              Se désabonner
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+      <p *ngIf="!user.abonnements || user.abonnements.length === 0" class="no-subscriptions">
+        Vous n'êtes abonné à aucun thème pour le moment.
+      </p>
+  
+      <mat-divider class="section-divider"></mat-divider>
+  
+    </ng-container>
+  
+    <!-- Affichage d'erreur globale si le chargement initial échoue -->
+     <div *ngIf="profileError && !isLoading" class="global-error-message">
+      <mat-icon color="warn">error_outline</mat-icon>
+      <p>{{ profileError }}</p>
+      <button mat-stroked-button color="primary" (click)="loadUserProfile()">Réessayer</button>
+    </div>
+  
+  </div>

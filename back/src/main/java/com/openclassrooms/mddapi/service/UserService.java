@@ -28,17 +28,22 @@ public interface UserService {
     UserDto getUserByUsername(String username);
     
     /**
-     * Update user
-     * @param userDto Updated user data
+     * Update the currently authenticated user's profile
+     * @param userDto Updated user data (email and username)
      * @return Updated user
      */
     UserDto updateUser(UserDto userDto);
 
     /**
-     * Update user password
-     * @param userId User ID
+     * Update the currently authenticated user's password
      * @param currentPassword Current password
      * @param newPassword New password
      */
-    void updatePassword(Long userId, String currentPassword, String newPassword);
+    void updatePassword(String currentPassword, String newPassword);
+    
+    /**
+     * Get the profile of the currently authenticated user
+     * @return Current user data including subscriptions
+     */
+    UserDto getCurrentUserProfile();
 }

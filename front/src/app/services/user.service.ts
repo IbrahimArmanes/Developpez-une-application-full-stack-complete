@@ -15,48 +15,29 @@ export class UserService {
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   getProfile(): Observable<UserDto> {
-    const currentUser = this.authService.getCurrentUser();
-    
-    if (!currentUser || !currentUser.id) {
-      return throwError(() => new Error('User not logged in'));
-    }
-    
-    const userId = currentUser.id;
-    
-    return this.http.get<UserDto>(`${this.apiUrl}/users/${userId}`)
+    return this.http.get<UserDto>(`${this.apiUrl}/users/me`)
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  updateProfile(userDto: UserDto): Observable<UserDto> {
-    const currentUser = this.authService.getCurrentUser();
-    
-    if (!currentUser || !currentUser.id) {
-      return throwError(() => new Error('User not logged in'));
-    }
-    
-    // Ensure the userDto ID matches the logged-in user's ID
-    if (userDto.id !== currentUser.id) {
-      return throwError(() => new Error('Cannot update profile for another user'));
-    }
-    
-    return this.http.put<UserDto>(`${this.apiUrl}/users/${userDto.id}`, userDto)
+  updateProfile(userDto: Omit<UserDto, 'id' | 'abonnements'>): Observable<UserDto> {
+    return this.http.put<UserDto>(`${this.apiUrl}/users/me`, userDto)
       .pipe(
         catchError(this.handleError)
       );
   }
 
   updatePassword(request: PasswordUpdateRequest): Observable<MessageResponse> {
-    const currentUser = this.authService.getCurrentUser();
-    
-    if (!currentUser || !currentUser.id) {
-      return throwError(() => new Error('User not logged in'));
-    }
-    
-    const userId = currentUser.id;
-    
-    return this.http.put<MessageResponse>(`${this.apiUrl}/users/${userId}/password`, request)
+    return this.http.put<MessageResponse>(`${this.apiUrl}/users/me/password`, request)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  // Updated to use the correct endpoint from SubjectController
+  unsubscribeFromSubject(subjectId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/subjects/${subjectId}/subscribe`)
       .pipe(
         catchError(this.handleError)
       );
