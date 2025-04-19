@@ -1,9 +1,11 @@
 package com.openclassrooms.mddapi.model;
 
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.ToString;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,9 +14,12 @@ import java.util.Set;
 
 @Entity
 @Table(name = "posts")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"auteur", "theme", "commentaires"})
+@EqualsAndHashCode(of = "id") // Only use id for equals and hashCode
 public class Post {
     
     @Id

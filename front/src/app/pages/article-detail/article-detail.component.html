@@ -16,8 +16,8 @@
   
       <div class="article-meta">
         <span>{{ post.date | date:'dd/MM/yyyy' }}</span>
-        <span>par {{ post.auteur?.username || 'Auteur inconnu' }}</span>
-        <span>Thème: {{ post.theme?.nom || 'Thème inconnu' }}</span>
+        <span>par {{ post.auteur.username || 'Auteur inconnu' }}</span>
+        <span>Thème: {{ post.theme.nom || 'Thème inconnu' }}</span>
       </div>
   
       <div class="content-body">
@@ -35,7 +35,7 @@
           <mat-list>
             <mat-list-item *ngFor="let comment of post.commentaires" class="comment-item">
               <div mat-line class="comment-header">
-                <strong>{{ comment.auteur?.username || 'Utilisateur inconnu' }}</strong>
+                <strong>{{ comment.auteur.username || 'Utilisateur inconnu' }}</strong>
                 <span class="comment-date">{{ comment.date | date:'short' }}</span>
               </div>
               <p mat-line class="comment-content"> {{ comment.contenu }} </p>
@@ -47,18 +47,33 @@
           <p>Aucun commentaire pour cet article.</p>
         </div>
   
-         <!-- Zone pour ajouter un commentaire (sera implémentée plus tard) -->
-         <div class="add-comment-placeholder">
-           <mat-form-field appearance="outline" class="comment-input-placeholder">
-              <mat-label>Écrivez ici votre commentaire</mat-label>
-              <textarea matInput disabled rows="3"></textarea>
-              <button mat-icon-button matSuffix disabled>
-                  <mat-icon>send</mat-icon>
+        <!-- Formulaire d'ajout de commentaire -->
+        <div class="add-comment-section">
+          <h3>Ajouter un commentaire</h3>
+          <form [formGroup]="commentForm" (ngSubmit)="onSubmitComment()" class="comment-form">
+            <mat-form-field appearance="outline" class="comment-input">
+              <mat-label>Votre commentaire</mat-label>
+              <textarea matInput formControlName="content" required rows="4" placeholder="Écrivez votre commentaire ici..."></textarea>
+              <mat-error *ngIf="commentForm.get('content')?.hasError('required')">
+                Le commentaire ne peut pas être vide
+              </mat-error>
+              <mat-error *ngIf="commentForm.get('content')?.hasError('minlength')">
+                Le commentaire doit contenir au moins 1 caractère
+              </mat-error>
+            </mat-form-field>
+            
+            <div class="form-actions">
+              <button 
+                mat-raised-button 
+                color="primary" 
+                type="submit" 
+                [disabled]="commentForm.invalid || isSubmittingComment">
+                <span *ngIf="!isSubmittingComment">Envoyer</span>
+                <mat-spinner *ngIf="isSubmittingComment" diameter="20"></mat-spinner>
               </button>
-           </mat-form-field>
-         </div>
-  
+            </div>
+          </form>
+        </div>
       </section>
-  
-    </div>
+      </div>
   </div>
