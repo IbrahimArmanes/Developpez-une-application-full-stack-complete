@@ -96,26 +96,15 @@ export class ArticleDetailComponent implements OnInit {
       )
       .subscribe({
         next: (newCommentDto: CommentDto) => {
-          // Add the new comment to the post's comments array
-          if (this.post && this.post.commentaires) {
-            // If commentaires is a Set, convert to array first
-            if (!(this.post.commentaires instanceof Array)) {
-              this.post.commentaires = Array.from(this.post.commentaires);
-            }
-            
-            // Add the new comment
-            this.post.commentaires.push(newCommentDto);
-          }
-          
-          // Reset the form
-          this.commentForm.reset();
-          
           // Show success message
           this.snackBar.open('Commentaire ajouté avec succès', 'Fermer', {
             duration: 3000,
             horizontalPosition: 'center',
             verticalPosition: 'bottom'
           });
+          
+          // Refresh the page
+          window.location.reload();
         },
         error: (err) => {
           // Show error message
@@ -129,7 +118,4 @@ export class ArticleDetailComponent implements OnInit {
             }
           );
           console.error('Error adding comment:', err);
-        }
-      });
-  }
-}
+        }      });  }}

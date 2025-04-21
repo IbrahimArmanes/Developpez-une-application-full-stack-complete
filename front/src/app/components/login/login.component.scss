@@ -141,3 +141,12 @@ mat-error {
   background-color: #f44336; // Couleur d'erreur Material Design
   color: white;
 }
+.error-message {
+  color: #f44336;
+  background-color: rgba(244, 67, 54, 0.1);
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 14px;
+}

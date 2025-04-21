@@ -20,6 +20,11 @@
     <!-- Title -->
     <h2 class="title">Se connecter</h2>
 
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
     <!-- Login Form -->
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
 

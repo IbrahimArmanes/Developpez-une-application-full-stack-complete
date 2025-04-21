@@ -27,7 +27,7 @@ export class AuthService {
   }
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, credentials)
+    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, credentials, { withCredentials: true })
       .pipe(
         tap(response => {
           this.handleAuthentication(response);
@@ -37,23 +37,41 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userData');
-    localStorage.removeItem('tokenExpiration');
-    this.currentUserSubject.next(null);
+    // Call the logout endpoint to clear the cookie on the server
+    this.http.post(`${this.apiUrl}/auth/logout`, {}, { withCredentials: true })
+      .subscribe({
+        next: () => {
+          this.clearLocalUserData();
+          this.router.navigate(['']);
+        },
+        error: () => {
+          // Even if the server request fails, clear local data
+          this.clearLocalUserData();
+          this.router.navigate(['']);
+        }
+      });
+  }
+
+  private clearLocalUserData(): void {
     if (this.tokenExpirationTimer) {
       clearTimeout(this.tokenExpirationTimer);
     }
     this.tokenExpirationTimer = null;
-    this.router.navigate(['']);
+    this.currentUserSubject.next(null);
+    
+    // Remove any local storage items if they exist
+    localStorage.removeItem('userData');
+    localStorage.removeItem('tokenExpiration');
   }
 
   isLoggedIn(): boolean {
-    const token = this.getToken();
-    if (!token) {
+    // Check if we have user data
+    const userData = this.getCurrentUser();
+    if (!userData) {
       return false;
     }
     
+    // Check if token is expired
     const expirationDate = this.getTokenExpirationDate();
     if (!expirationDate) {
       return false;
@@ -62,28 +80,23 @@ export class AuthService {
     return expirationDate > new Date();
   }
 
-  getToken(): string | null {
-    return localStorage.getItem('token');
-  }
-
   getCurrentUser(): User | null {
     const userData = localStorage.getItem('userData');
     if (!userData) {
-      return null;
+      return this.currentUserSubject.value;
     }
     return JSON.parse(userData);
   }
 
   private handleAuthentication(response: LoginResponse): void {
-    const { token, ...userData } = response;
-    localStorage.setItem('token', token);
-    localStorage.setItem('userData', JSON.stringify(userData));
+    // Store user data locally (but not the token, which is in the cookie)
+    localStorage.setItem('userData', JSON.stringify(response));
     
     // Set token expiration (assuming JWT expires in 1 hour)
     const expirationDate = new Date(new Date().getTime() + 3600 * 1000);
     localStorage.setItem('tokenExpiration', expirationDate.toISOString());
     
-    this.currentUserSubject.next(userData);
+    this.currentUserSubject.next(response);
     this.autoLogout(3600 * 1000);
   }
 
@@ -131,6 +144,8 @@ export class AuthService {
       // Server-side error
       if (error.status === 0) {
         errorMessage = 'Could not connect to the server. Please check your internet connection.';
+      } else if (error.status === 401) {
+        errorMessage = "Nom d'utilisateur ou mot de passe incorrect";
       } else if (error.error && error.error.message) {
         errorMessage = error.error.message;
       } else {

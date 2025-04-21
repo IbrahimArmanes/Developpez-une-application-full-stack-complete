@@ -34,6 +34,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { CreatePostComponent } from './pages/create-post/create-post.component';   
+import { CookieService } from 'ngx-cookie-service';
 
 
 
@@ -69,13 +70,13 @@ import { CreatePostComponent } from './pages/create-post/create-post.component';
     MatDividerModule,         
   ],
   providers: [
+    CookieService,
     AuthService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
     }
-  ],
-  bootstrap: [AppComponent],
+  ],  bootstrap: [AppComponent],
 })
 export class AppModule {}

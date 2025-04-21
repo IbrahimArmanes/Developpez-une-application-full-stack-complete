@@ -17,18 +17,10 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService, private router: Router) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    // Skip adding token for auth endpoints
-    if (request.url.includes('/auth/login') || request.url.includes('/auth/register')) {
-      return next.handle(request);
-    }
-    
-    const token = this.authService.getToken();
-    
-    if (token) {
+    // For all requests, ensure credentials are included (cookies)
+    if (!request.withCredentials) {
       request = request.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`
-        }
+        withCredentials: true
       });
     }
     

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/comments")
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class CommentController {
 
     @Autowired

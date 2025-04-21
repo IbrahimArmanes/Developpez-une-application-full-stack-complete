@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 import { UserDto } from '../../models/user.models';
@@ -29,7 +30,8 @@ export class ProfileComponent implements OnInit {
     private userService: UserService,
     private authService: AuthService,
     private fb: FormBuilder,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {
     // Initialize forms
     this.profileForm = this.fb.group({
@@ -46,7 +48,6 @@ export class ProfileComponent implements OnInit {
       ]]
     });
   }
-
   ngOnInit(): void {
     this.loadUserProfile();
   }
@@ -86,8 +87,10 @@ export class ProfileComponent implements OnInit {
         this.user = updatedUser;
         this.isUpdatingProfile = false;
         this.snackBar.open('Profile updated successfully', 'Close', { duration: 3000 });
-      },
-      error: (error) => {
+        // Logout and redirect to login page
+        this.authService.logout();
+        this.router.navigate(['/login']);
+      },      error: (error) => {
         this.formProfileError = error.message || 'Failed to update profile';
         this.isUpdatingProfile = false;
         this.snackBar.open(this.formProfileError ?? 'An error occurred', 'Close', { duration: 5000 });
@@ -110,6 +113,8 @@ export class ProfileComponent implements OnInit {
         this.hideCurrentPassword = true;
         this.hideNewPassword = true;
         this.snackBar.open('Password updated successfully', 'Close', { duration: 3000 });
+        // Reload the page after successful password update
+        window.location.reload();
       },
       error: (error) => {
         this.formPasswordError = error.message || 'Failed to update password';
@@ -118,7 +123,6 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
-
   unsubscribe(subjectId: number): void {
     this.userService.unsubscribeFromSubject(subjectId).subscribe({
       next: () => {

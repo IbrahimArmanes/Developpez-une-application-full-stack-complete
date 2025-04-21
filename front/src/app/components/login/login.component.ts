@@ -15,6 +15,7 @@ export class LoginComponent implements OnInit {
   isSubmitting = false;
   hidePassword = true;
   returnUrl: string = '/';
+  errorMessage: string | null = null;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -44,6 +45,7 @@ export class LoginComponent implements OnInit {
     }
 
     this.isSubmitting = true;
+    this.errorMessage = null;
 
     const credentials = {
       username: this.loginForm.value.username, 
@@ -57,13 +59,12 @@ export class LoginComponent implements OnInit {
       },
       error: (error) => {
         this.isSubmitting = false;
-        const errorMessage = error?.error?.message || error?.message || 'Login failed. Please check your credentials.';
-        this.snackBar.open(errorMessage, 'Close', {
+        this.errorMessage = error.message || "Nom d'utilisateur ou mot de passe incorrect";
+        this.snackBar.open(this.errorMessage || "Erreur", 'Fermer', {
           duration: 5000,
           panelClass: ['error-snackbar'] 
         });
-      }
-    });
+      }    });
   }
 
   // Méthode pour le bouton retour
